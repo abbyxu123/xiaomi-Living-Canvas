@@ -1,0 +1,9 @@
+/build/
+/data/
+/generated/*.rgb565
+*.bin
+*.elf
+*.map
+*.dSYM/
+.DS_Store
+__pycache__/

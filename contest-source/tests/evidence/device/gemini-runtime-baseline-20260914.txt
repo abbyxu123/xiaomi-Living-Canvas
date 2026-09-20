@@ -1,0 +1,41 @@
+Living Canvas Gemini-S1 runtime baseline (read-only)
+Recorded: 2026-09-14 Asia/Shanghai
+
+Target selection
+  ADB serial: 1234
+  USB product: adb
+  USB model: adb_board
+  OS device: NuttX
+
+Current factory firmware properties
+  ro.build.manufacturer=Xiaomi
+  ro.product.name=ASX4B
+  ro.build.version=1.51.32
+  ro.build.id=1.51.32
+  ro.build.channel=current
+  ro.product.device.screenshape=rect
+  ro.product.device.devicetype=smartspeaker
+  persist.ota.active_slot=A
+
+Storage observations
+  /proc/partitions reports nand_phy entries
+  /data is mounted as YAFFS
+  /etc and /resource are mounted as ROMFS
+  /dev exposes nand0, nand0p1, nand0p2, nand1, and nand1p1 through nand1p7
+
+Runtime command observations
+  adb shell is available
+  current built-in applications do not include vapp, ai_agent, or living_canvas
+  exec accepts a hexadecimal memory address, not an ELF file path
+  /dev/audio exposes pcm0c and pcm0p
+
+Conclusion
+  The board has a writable data partition, but the native Living Canvas program
+  is linked into the firmware. ADB file transfer alone cannot install or start
+  this build on the current factory runtime. Product identifier ASX4B must be
+  reconciled with the Gemini-S1 build target before the first firmware write.
+
+Safety
+  Commands were limited to ADB enumeration, echo, help, cat, ls, mount, df, and
+  other read-only inspection. No push, recording, playback, reboot, OTA, flash,
+  erase, partition write, recovery entry, or configuration change was performed.

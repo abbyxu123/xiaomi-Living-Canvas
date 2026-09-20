@@ -1,0 +1,37 @@
+Living Canvas independent backend integration evidence
+Date: 2026-09-17 Asia/Shanghai
+Status: PASS
+
+Scope
+- Backend source: backend/src/living_canvas_backend
+- Board contract: app/hello_app/include/lc_backend_contract.h
+- No credentials, personal profile data, payment data, or environment values recorded.
+
+Live HTTP flow
+Command:
+  ./scripts/host/verify_living_canvas_backend.py --base-url http://127.0.0.1:8765
+
+Result:
+  PASS: Living Canvas takeout flow reached a rules-backed candidate.
+  PASS: compact handoff returned HTTP 307 to /console?session=<redacted>.
+
+Observed endpoint sequence
+  GET  /health                 200
+  POST /v1/session             201
+  POST /v1/input               200
+  POST /v1/device/event        200
+  POST /v1/confirm             200
+  GET  /c/<redacted>           307
+
+Safety boundary
+- Hard constraints are applied locally before model or rules selection.
+- A candidate cannot be handed off before explicit device acceptance.
+- The result opens an allowlisted platform search URL only.
+- Final product, address, price, order submission, and payment remain user actions.
+
+Regression summary
+- Python backend: 33 passed
+- C host suite: 12 executables passed
+- openvela build metadata: PASS
+- LVGL build metadata: PASS
+- Living Canvas-only branding gate: PASS

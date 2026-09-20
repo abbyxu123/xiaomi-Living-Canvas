@@ -1,0 +1,31 @@
+Living Canvas model-provider connectivity evidence
+Date: 2026-09-15 (Asia/Shanghai)
+
+Provider
+- Xiaomi MiMo
+- Interface: OpenAI-compatible Chat Completions
+- Endpoint host: api.xiaomimimo.com
+- Requested model: mimo-v2.5
+- Returned model: mimo-v2.5
+
+Bounded probe
+- Request contained only the fixed text: Return exactly LC-MIMO-OK
+- HTTP status: 200
+- Finish reason: stop
+- Returned content: LC-MIMO-OK
+- Confirming request usage: 254 prompt tokens, 126 completion tokens
+
+Privacy and cost boundary
+- No project content, user data, image, audio, memory, or device data was sent.
+- The API key was read at runtime from a user-provided local RTF file.
+- The API key was not printed, copied into source, committed, or uploaded.
+- Two minimal requests were sent. The first used a 32-token output cap and
+  authenticated successfully, but its visible content was empty because the
+  cap was consumed by model reasoning. The second raised only the output cap
+  and returned the exact fixed response.
+
+Interpretation
+- This proves provider authentication and basic text-generation connectivity
+  from the development Mac.
+- It does not yet prove network connectivity or provider configuration on the
+  physical Gemini-S1 board.

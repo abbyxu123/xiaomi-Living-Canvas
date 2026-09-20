@@ -1,0 +1,97 @@
+import json
+import os
+from dataclasses import dataclass
+from typing import List, Optional
+
+import httpx
+
+from .schema import Candidate, SoftPreferences
+
+
+@dataclass(frozen=True)
+class ModelChoice:
+    candidate_id: str
+    reason: str
+
+
+class ModelGateway:
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        api_key: str,
+        client: Optional[httpx.Client] = None,
+        timeout_seconds: float = 4.0,
+    ):
+        self.base_url = base_url.rstrip("/")
+        self.model = model
+        self.api_key = api_key
+        self.client = client or httpx.Client(timeout=timeout_seconds)
+
+    @classmethod
+    def from_env(cls):
+        return cls(
+            base_url=os.environ.get("LIVING_CANVAS_MODEL_BASE_URL", ""),
+            model=os.environ.get("LIVING_CANVAS_MODEL_NAME", ""),
+            api_key=os.environ.get("LIVING_CANVAS_MODEL_API_KEY", ""),
+        )
+
+    @property
+    def enabled(self) -> bool:
+        return bool(self.base_url and self.model and self.api_key)
+
+    def choose(
+        self,
+        candidates: List[Candidate],
+        preferences: SoftPreferences,
+    ) -> Optional[ModelChoice]:
+        if not self.enabled or not candidates:
+            return None
+
+        candidate_ids = {item.candidate_id for item in candidates}
+        compact_candidates = [
+            {
+                "candidate_id": item.candidate_id,
+                "name": item.name,
+                "cuisine": item.cuisine,
+                "temperature": item.temperature,
+                "tags": item.tags,
+            }
+            for item in candidates
+        ]
+        prompt = {
+            "task": "Choose exactly one candidate ID and give a short reason.",
+            "preferences": preferences.model_dump(),
+            "candidates": compact_candidates,
+            "response_schema": {"candidate_id": "string", "reason": "string"},
+        }
+        try:
+            response = self.client.post(
+                self.base_url + "/chat/completions",
+                headers={"Authorization": "Bearer " + self.api_key},
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "Return one JSON object only. Do not invent candidates.",
+                        },
+                        {
+                            "role": "user",
+                            "content": json.dumps(prompt, ensure_ascii=False),
+                        },
+                    ],
+                    "temperature": 0.2,
+                    "response_format": {"type": "json_object"},
+                },
+            )
+            response.raise_for_status()
+            content = response.json()["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+            candidate_id = parsed["candidate_id"]
+            reason = parsed["reason"]
+            if candidate_id not in candidate_ids or not isinstance(reason, str):
+                return None
+            return ModelChoice(candidate_id=candidate_id, reason=reason[:160])
+        except (httpx.HTTPError, KeyError, IndexError, TypeError, ValueError):
+            return None

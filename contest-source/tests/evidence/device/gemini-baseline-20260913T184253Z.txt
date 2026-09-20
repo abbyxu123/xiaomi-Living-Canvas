@@ -1,0 +1,16 @@
+Living Canvas Gemini-S1 read-only baseline
+Captured (UTC): 20260913T184253Z
+Expected target serial: 1234
+
+=== adb version ===
+Android Debug Bridge version 1.0.41
+Version 37.0.1-15733141
+Installed as <HOME>/Desktop/xiaomi-openvela-ibbie/local-setup/platform-tools/adb
+Running on Darwin 22.3.0 (arm64)
+
+=== adb devices -l ===
+List of devices attached
+1234                   device usb:34603008X product:adb dev model:adb_board device:NuttX device transport_id:5
+
+Shell collection: SKIPPED
+Reason: adb shell command transport did not produce a verified board response; no device command is assumed safe.

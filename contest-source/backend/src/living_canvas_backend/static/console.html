@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>画间 · Living Canvas</title>
+  <style>
+    :root { color-scheme: light; --ink:#2d211c; --cream:#fff7ea; --orange:#e9823d; --blue:#233d78; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+      background:radial-gradient(circle at 70% 10%,#ffc17e 0,#f39b58 28%,#6a342c 100%); padding:24px; }
+    main { max-width:520px; margin:auto; background:rgba(255,247,234,.94); border-radius:30px; padding:28px; box-shadow:0 24px 60px #2d171555; }
+    .eyebrow { color:#a34b2a; font-weight:700; letter-spacing:.08em; }
+    h1 { margin:.3em 0 .2em; font-size:36px; }
+    .roles { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:24px 0; }
+    .role { background:white; border-radius:16px; padding:10px 4px; text-align:center; font-size:12px; }
+    .role b { display:block; font-size:20px; margin-bottom:4px; }
+    .card { background:#fff; border:1px solid #f0d7c1; border-radius:20px; padding:20px; min-height:130px; }
+    .action { display:block; margin-top:18px; padding:15px; border-radius:16px; background:var(--orange); color:white; text-align:center; font-weight:700; text-decoration:none; }
+    .note { font-size:13px; opacity:.68; line-height:1.55; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">LIVING CANVAS · 画间</div>
+    <h1>今晚吃什么？</h1>
+    <p>比格犬负责协调执行，美短猫记住口味，其余朋友在需要时提供线索。</p>
+    <div class="roles" aria-label="画间角色">
+      <div class="role"><b>🐶</b>比格犬</div><div class="role"><b>🐱</b>美短猫</div>
+      <div class="role"><b>🐦</b>鸽子</div><div class="role"><b>🐷</b>小猪</div>
+      <div class="role"><b>🪐</b>外星人</div>
+    </div>
+    <section class="card" id="result">正在读取画框上的选择……</section>
+    <p class="note">画间只帮你筛选并打开外卖平台；最终商品、价格、地址与付款均由你在平台内确认。</p>
+  </main>
+  <script>
+    const result = document.querySelector('#result');
+    const session = new URLSearchParams(location.search).get('session');
+    if (!session) result.textContent = '请从画框上的二维码进入。';
+    else fetch('/v1/session/' + encodeURIComponent(session)).then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const choice = data.recommendation?.candidate;
+        if (!choice) throw new Error();
+        result.innerHTML = `<h2>${choice.name}</h2><p>预计 ¥${choice.price_cny} · ${choice.delivery_minutes} 分钟</p>`;
+        if (data.metadata?.external_url) {
+          const link = document.createElement('a'); link.className='action'; link.textContent='打开外卖平台继续确认';
+          link.href=data.metadata.external_url; link.rel='noopener noreferrer'; result.appendChild(link);
+        }
+      }).catch(() => result.textContent='这次选择暂时无法读取，请回到画框重试。');
+  </script>
+</body>
+</html>

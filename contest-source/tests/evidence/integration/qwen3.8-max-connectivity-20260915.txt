@@ -1,0 +1,27 @@
+Living Canvas model-provider connectivity evidence
+Date: 2026-09-15 (Asia/Shanghai)
+
+Provider
+- Alibaba Cloud Model Studio (Qwen)
+- Interface: OpenAI-compatible Chat Completions
+- Endpoint host: dashscope.aliyuncs.com
+- Requested model: qwen3.8-max
+- Returned model: qwen3.8-max
+
+Bounded probe
+- Request contained only the fixed text: Return exactly LC-QWEN-OK
+- HTTP status: 200
+- Finish reason: stop
+- Returned content: LC-QWEN-OK
+
+Privacy and cost boundary
+- No project content, user data, image, audio, memory, or device data was sent.
+- The API key was read at runtime from a user-provided local file.
+- The API key was not printed, copied into source, committed, or uploaded.
+- Only one minimal probe request was sent.
+
+Interpretation
+- This proves provider authentication and basic text-generation connectivity
+  from the development Mac.
+- It does not yet prove network connectivity or provider configuration on the
+  physical Gemini-S1 board.

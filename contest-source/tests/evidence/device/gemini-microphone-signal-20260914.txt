@@ -1,0 +1,35 @@
+Gemini-S1 built-in microphone signal evidence
+Recorded: 2026-09-14 Asia/Shanghai
+
+Consent and scope
+  The user explicitly approved a short microphone test.
+  Target: ADB serial 1234, factory NuttX system.
+  Input device: /dev/audio/pcm0c.
+  No camera, external sensor, firmware flash, or system partition was used.
+
+Observed behavior
+  nxrecorder did not auto-select an input device; the first record attempt returned
+  "No suitable Audio Device found" and captured nothing.
+  After explicitly selecting /dev/audio/pcm0c, raw PCM capture produced a file.
+  The interactive recorder detached from the controlling terminal instead of
+  stopping at the requested window. It was terminated with pkill immediately after
+  this was detected. This behavior must not be relied on for future time limits.
+
+Non-content signal check
+  captured bytes before deletion: 28508160
+  SHA-256 before deletion:
+    76b09b7becef28e6d4016fc4704f1b6e80443740db23bc4bfd39fe5bdc38352d
+  first 131072 signed 16-bit values:
+    nonzero=130344 min=-464 max=463 rms=79.94
+  Result: AUDIO_CAPTURE_SIGNAL_PRESENT
+
+Privacy cleanup
+  Audio was not played, transcribed, committed, or uploaded.
+  /data/living_canvas_mic_test.pcm was removed from the device.
+  /tmp/living_canvas_mic_test.pcm was removed from the Mac.
+  pidof confirmed no nxrecorder task remained, and both file checks returned absent.
+
+Future safety rule
+  Any later audio capture must use an independently controlled hard timeout, verify
+  the recorder PID has exited, and delete raw audio as soon as the required signal
+  property is verified.

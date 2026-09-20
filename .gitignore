@@ -1,0 +1,9 @@
+# Local installers and virtual-machine files are not project source.
+/local-setup/
+
+# Finder metadata and downloaded working files are not part of the backup.
+.DS_Store
+/tmp/
+
+# Local history packages can contain machine-specific historical data.
+*.bundle

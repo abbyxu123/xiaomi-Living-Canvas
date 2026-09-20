@@ -1,0 +1,17 @@
+# Local installers, virtual machines, source workspaces, and backups are not project source.
+/local-setup/
+/tmp/
+/.worktrees/
+.DS_Store
+*.utm/
+*.qcow2
+*.iso
+
+# Never commit local credentials or SSH private keys.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+id_ed25519*
