@@ -16,7 +16,10 @@ This baseline is read-only. It does not flash, reboot, erase, configure, mount, 
 - ADB package: Android platform-tools 37.0.1, stored below ignored `local-setup/`
 - Platform-tools archive SHA-256: `ee39ad5967e95c2a07f04dbcbde96b1a0c916ba376096db5d2f498b7727a5d1d`
 
-The current physical inventory intentionally has the Gemini-S1 connected alone. The mmWave and camera-controller serials are kept outside the public source tree; set `MMWAVE_SERIAL` and `CAMERA_SERIAL` locally when verifying the complete hardware set.
+The current physical inventory intentionally has the Gemini-S1 connected alone. The recorded mmWave and camera-controller serials are absent, which is the expected safe state during board baseline work:
+
+- Seeed mmWave expected serial: `10:BD:A3:9F:6A:10`
+- Seeed camera controller expected serial: `A4:CB:8F:D1:4F:5C`
 
 ## Shell capability status
 

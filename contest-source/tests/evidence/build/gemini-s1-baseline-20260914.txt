@@ -1,0 +1,55 @@
+Living Canvas Gemini-S1 clean build evidence
+Recorded: 2026-09-14 Asia/Shanghai
+Completed: 2026-09-14 10:24:19 UTC
+
+Source
+  workspace: /home/abby/openvela-workspace
+  manifest branch: dev-ai-contest-2026
+  team manifest revision: 224850b197da7837e60b45573af26a479d366dd9
+  repo sync: completed successfully
+  post-build status qualification: full builds generate dependency/object files
+  and manifest linkfile/nested-project overlays; intended source repositories were
+  returned to a known clean state before AI integration
+
+Guest
+  OS: Ubuntu Server 22.04.5 LTS
+  architecture: aarch64
+  CPU: 4 virtual cores
+  memory: 7.7 GiB reported
+  build concurrency: -j2
+
+Target
+  vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/
+  baseline configuration was not replaced by the AI Agent defconfig
+  fix_gemini_s1.sh was not run for this clean baseline
+
+Compatibility environment
+  QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
+  QEMU_SET_ENV=LD_LIBRARY_PATH=/home/abby/.local/share/openvela-x86_64-jammy/root/lib/x86_64-linux-gnu
+  verified Ubuntu amd64 zlib1g package SHA-256:
+  9dc17e51a1be2d9ed63b7b84ef0e4e29c5abe6f1bc62cb03e7181483cce8a2f2
+
+Build
+  command: ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/ -j2
+  exit code: 0
+  SDRAM region used: 13639036 B / 961943040 B (1.42%)
+
+Outputs
+  7345972  nuttx/nuttx
+  sha256 05566f786bda3b9820adb5f21f6ae6c6dbf6b3796a54c9d2b6bda1eafe4f9996
+
+  155426276  nuttx/nuttx.elf
+  sha256 5fcdf464591975cb59b7bbb9101c7ee0f2fd785a0a4b33adefca04b9c7be4904
+
+  113143844  nuttx/nuttx.bin
+  sha256 c45d7273d17e9de92f469cb63b43c6acd7962ca2abec4e6cb361e46211047f73
+
+  7340976  nuttx/vela.bin
+  sha256 73ad6568dc3c903f0492c339df7d1feca739087fadc442ffc27b6845bc7aca6f
+
+  7340976  vendor/allwinnertech/lichee/board/r528s3/gemini-s1_nand/configs/nsh.fex
+  sha256 73ad6568dc3c903f0492c339df7d1feca739087fadc442ffc27b6845bc7aca6f
+
+Flash state
+  No flash, erase, OTA, repartition, recovery-mode entry, or device write was performed.
+  Status: BLOCKED_FOR_FLASH pending the recovery prerequisites in docs/RECOVERY.md.

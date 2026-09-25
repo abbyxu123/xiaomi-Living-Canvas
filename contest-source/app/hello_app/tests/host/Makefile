@@ -57,6 +57,7 @@ test: $(TARGETS)
 	./test_lc_choice
 	./test_lc_backend_contract
 	./test_lc_competition
+	bash ./test_skill_metadata.sh
 
 clean:
 	rm -rf $(TARGETS) $(addsuffix .dSYM,$(TARGETS))

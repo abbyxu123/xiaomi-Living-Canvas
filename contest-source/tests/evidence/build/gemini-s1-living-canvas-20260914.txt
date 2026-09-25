@@ -1,0 +1,67 @@
+Living Canvas Gemini-S1 product build evidence
+Recorded: 2026-09-14 Asia/Shanghai
+Completed: 2026-09-14 11:45:25 UTC
+
+Source
+  workspace: /home/abby/openvela-workspace
+  manifest branch: dev-ai-contest-2026
+  team application commit: 0c6aa748bf58d81a5a76dc47f49d251eb11160c7
+  Gemini-S1 AI/Living Canvas board commit: 657aa2c0
+  media compatibility commit: 5fc8297a5ca8
+  FFmpeg compatibility commit: 0c77024d2205
+
+Configuration
+  official AI Agent defconfig and fix_gemini_s1.sh were applied first
+  script result: every patch segment reported [ok]; no [WARN]
+  CONFIG_EXAMPLES_AI_AGENT_VELA=y
+  CONFIG_LVX_USE_DEMO_CONTEST2026_482_LIVING_CANVAS=y
+
+Compatibility environment
+  QEMU_LD_PREFIX=/usr/x86_64-linux-gnu
+  QEMU_SET_ENV=LD_LIBRARY_PATH=/home/abby/.local/share/openvela-x86_64-jammy/root/lib/x86_64-linux-gnu
+
+Build
+  command: ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/ -e -Wno-error -j2
+  exit code: 0
+  SDRAM region used: 12681252 B / 961943040 B (1.32%)
+
+Application proof
+  build log compiled:
+    hello_app_main.c
+    src/lc_clock.c
+    src/lc_dinner.c
+    src/lc_memory.c
+    src/lc_state.c
+    src/lc_ui.c
+  nuttx.elf symbol: 414cf568 T living_canvas_main
+
+Outputs
+  6008596  nuttx/nuttx
+  sha256 0c1f00906db4001a05ee73173acb680be918194b760aa38ecf5f9b9ddd8fafc2
+
+  57181168  nuttx/nuttx.elf
+  sha256 3e2d6504f8728c0d15cf23af72a60b4bea7a87fb8eb5a60d82ae42071aa8efe4
+
+  113143844  nuttx/nuttx.bin
+  sha256 a8ba6212ade1a549e71a88aa7b99f117da63fca684b595f3705dce692f6250fa
+
+  6003600  nuttx/vela.bin
+  sha256 876a09162538bb84415cc588a3a0240ccb8b6af5fb24401b61a0c1d27d6cc778
+
+  6003600  vendor/allwinnertech/lichee/board/r528s3/gemini-s1_nand/configs/nsh.fex
+  sha256 876a09162538bb84415cc588a3a0240ccb8b6af5fb24401b61a0c1d27d6cc778
+
+Backup
+  local-setup/backups/gemini-s1-living-canvas-20260914/
+  Mac and guest SHA-256 values for nsh.fex and nuttx.elf match.
+
+Repository state note
+  A full multi-repository build generates dependency/object files and manifest
+  linkfile or nested-project overlays. It also rewrites selected build files.
+  Therefore this evidence does not describe the full post-build `repo status`
+  as clean. Intended source changes are isolated in the commits above; generated
+  artifacts are not eligible for upload.
+
+Flash state
+  No flash, erase, OTA, repartition, recovery-mode entry, or device write was performed.
+  Status: PRODUCT_BUILD_PASSED / BLOCKED_FOR_FLASH pending docs/RECOVERY.md.

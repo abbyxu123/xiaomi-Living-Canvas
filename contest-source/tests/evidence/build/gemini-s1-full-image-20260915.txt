@@ -1,0 +1,53 @@
+# Gemini-S1 full image packaging evidence — 2026-09-15
+
+Scope
+- Package and verify only.
+- No flash, erase, recovery, OTA, partition write, or persistent device write was attempted.
+
+Source state
+- Living Canvas repository: 6bf773d
+- vendor/allwinnertech repository: dab15803
+- Product config: vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/
+- Application partition input: nsh.fex
+- nsh.fex SHA256: bb76f24bea2c7edad90d3abaf4d54b6f93e1094a1e90339a488dd8c1a6858a2d
+- nsh.fex was byte-identical to nuttx/vela.bin before packaging.
+
+Cross-architecture packaging controls
+- The vendor dragon executable is i386; genromfs and mkyaffs2image are x86_64.
+- Each foreign-architecture tool ran through an explicit QEMU user-mode wrapper.
+- Runtime libraries were downloaded from official Ubuntu Jammy package indexes, SHA256-verified, and extracted under the unprivileged abby user directory.
+- No dpkg architecture was added and no Ubuntu system package was installed or replaced.
+- Native ARM64 mkenvimage was extracted from the official Ubuntu Jammy u-boot-tools package and invoked from the user directory.
+
+Failure-path verification
+- Controlled PACK_DRAGON=/bin/false run: exit 1.
+- Expected terminal error: dragon pack run error.
+- This proves the patched script no longer reports a failed dragon invocation as success.
+
+Successful package verification
+- Final pack exit: 0.
+- dragon result: BuildImg 0 / SUCCESS.
+- Image: rtos_nuttx_r528s3-gemini-s1_uart0_128Mnand.img
+- Image size: 27,907,072 bytes.
+- Image SHA256: 1e52d069570496e9bbe0bbd6e20e35231e946787d77ab20985602cbd0cfb3e1f
+- res.fex size: 8,847,360 bytes.
+- usrdata.fex size: 11,059,200 bytes.
+- env.fex size: 4,096 bytes.
+- The final image contains the living_canvas and --agent-prompt strings.
+
+NAND boot0 independent check
+- image.cfg references boot0_nand.fex for the final image.
+- Magic: eGON.BT0.
+- Header length: 45,056 bytes, equal to file size.
+- Stored checksum: 3,902,202,140.
+- Checksum recomputed with the vendor STAMP_VALUE algorithm: 3,902,202,140.
+- Result: BOOT0_NAND_CHECKSUM_OK.
+
+Known vendor-script warnings
+- The logged boot0 checksum warning is produced while updating the unused SD-card copy; the NAND boot0 used by image.cfg independently passes checksum verification.
+- Board-specific res/usrdata directories are absent, so the vendor script intentionally falls back to its common data directories.
+- Board-specific ap.fex is absent; the copy attempt is non-fatal, and the application firmware is carried by nsh.fex rather than ap.fex.
+
+Safety gate
+- The candidate image is backed up locally with its SHA256.
+- First flash remains blocked until the Gemini-S1 V1.1 vendor procedure, exact USB/button sequence, and rollback/recovery package are confirmed.

@@ -1,0 +1,60 @@
+# Gemini-S1 LVGL offline safety preview build evidence — 2026-09-15
+
+Scope
+- Compile, package, and verify only.
+- No flash, erase, recovery, OTA, partition write, or persistent device write was attempted.
+- The preview is explicitly labeled SAFE OFFLINE PREVIEW and performs no model call,
+  audio/video capture, memory write, or device action.
+
+Source state
+- Living Canvas repository: f84f15cb85a3e206d98bc5418844cabaf0ae9289
+- vendor/allwinnertech repository: dab15803
+- Product config: vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/
+- Entry after a future verified flash: living_canvas --ui-preview
+
+Real Gemini-S1 build
+- Host: Ubuntu 22.04 ARM64 virtual machine, 4 vCPU, 8 GB RAM.
+- Build exit: 0.
+- Link result: success.
+- SDRAM usage: 12,685,860 bytes of 961,943,040 bytes (1.32%).
+- nsh.fex and nuttx/vela.bin were byte-identical before packaging.
+- nsh.fex size: 6,007,696 bytes.
+- nsh.fex SHA256: fd81e61078425fae5f52cc4a1082ecf5f08aad66f7ef5a9e06233519eb7ffe2d
+- nuttx.elf size: 57,224,132 bytes.
+- nuttx.elf SHA256: 56ddfbb820855cb710e738b644c2af74d036047095054af2d38fa3c43cc5c493
+
+Full NAND image package
+- Pack exit: 0.
+- Vendor result: BuildImg 0 / Dragon execute image.cfg SUCCESS.
+- Image: rtos_nuttx_r528s3-gemini-s1_uart0_128Mnand.img
+- Image size: 27,911,168 bytes.
+- Image SHA256: c56c06aec73f249829a79a6b6c0ccb31f0878ff158fc650b61d4c064369804ca
+- Image strings confirmed: --ui-preview, SAFE OFFLINE PREVIEW, --agent-prompt.
+
+NAND boot0 independent check
+- image.cfg uses boot0_nand.fex for the NAND image.
+- boot0_nand.fex size: 45,056 bytes.
+- boot0_nand.fex SHA256: 20cea5ee8e0cec1767b8c8c5d69c84f149e2a96069ca171620b300162b6facbc
+- Magic: eGON.BT0.
+- Header length: 45,056 bytes, equal to file size.
+- Stored checksum: 3,902,202,140.
+- Recomputed checksum: 3,902,202,140.
+- Result: BOOT0_NAND_CHECKSUM_OK=true.
+
+Backup verification
+- The image, nsh.fex, and nuttx.elf were copied into a new Mac backup directory.
+- Mac SHA256 values matched the virtual-machine source values exactly.
+- An earlier candidate backup was not overwritten.
+
+Known vendor-script warnings
+- The vendor log reports a checksum failure while touching the unused SD-card
+  boot0 copy. The NAND boot0 actually referenced by image.cfg independently passes.
+- Board-specific res/usrdata directories are absent, so the vendor script falls
+  back to its common data directories.
+- Board-specific ap.fex is absent; this copy warning is non-fatal because the
+  application firmware is carried in nsh.fex.
+
+Safety gate
+- The candidate is not claimed as on-device verified.
+- First flash remains blocked until the exact Gemini-S1 V1.1 vendor procedure,
+  USB/button sequence, recovery package, and rollback path are confirmed.

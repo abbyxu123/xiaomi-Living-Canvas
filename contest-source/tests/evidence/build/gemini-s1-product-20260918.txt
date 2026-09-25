@@ -1,0 +1,47 @@
+Living Canvas Gemini-S1 product build and package evidence
+Date: 2026-09-18 (Asia/Shanghai)
+Status: BUILT_AND_PACKED_NOT_FLASHED
+
+Scope
+- Rebuilt the Gemini-S1 application partition from Living Canvas revision 63311f0.
+- Packaged a complete 128 MB NAND LiveSuit image.
+- No flash, erase, repartition, recovery write, or persistent board write occurred.
+
+Host gates
+- 12 strict C host executables passed.
+- Living Canvas-only branding gate passed.
+- Device collection, evidence privacy, and USB inventory tests passed.
+
+Target build
+- Product configuration:
+  vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/
+- Build exit status: 0.
+- The compiler log contains lc_backend_contract.c, lc_competition.c,
+  lc_display.c, and the remaining Living Canvas sources.
+- SDRAM linker use: 13,009,968 bytes (1.35%).
+- nsh.fex is byte-identical to nuttx/vela.bin.
+- nuttx.elf contains living_canvas_main.
+- Firmware strings contain --competition-demo, SCAN ON PHONE,
+  PAYMENT STAYS ON PHONE, and SAFE RULES FALLBACK.
+
+Build artifacts
+- nsh.fex: 6,331,168 bytes
+  SHA-256: c42cabd04db844d02b7d2de251dce5fdbac45bb26294c0488b8b8c2e6c407a95
+- nuttx.elf: 57,408,744 bytes
+  SHA-256: 517cc3ce95dff54bb3ac89592f0ea47d3fd183433b3f748406e4cfe27c250b11
+
+Full image package
+- Vendor pack result: BuildImg 0 / SUCCESS.
+- Packed image/nsh.fex is byte-identical to the newly built vela.bin.
+- The complete image contains the current competition-demo and safety strings.
+- NAND boot0 magic: eGON.BT0.
+- NAND boot0 header length: 45,056 bytes, equal to file length.
+- Stored and recomputed boot0 checksum: 3,902,202,140.
+- Image size: 28,234,752 bytes.
+- Image SHA-256:
+  f20b3c37cc772f0284d8897c68fcfcdfe3eec7f158d4fc6396fc645c65a566b3
+
+Conclusion
+- TARGET_BUILD_PASSED
+- FULL_IMAGE_PACKAGE_PASSED
+- DEVICE_RUNTIME_NOT_CLAIMED

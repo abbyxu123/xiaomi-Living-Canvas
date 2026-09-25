@@ -1,0 +1,16 @@
+OS=Ubuntu 22.04
+ARCH=aarch64
+KERNEL=5.15.0-191-generic
+CPUS=4
+               total        used        free      shared  buff/cache   available
+Mem:           7.7Gi       173Mi       7.3Gi       5.0Mi       232Mi       7.4Gi
+Swap:          3.8Gi          0B       3.8Gi
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv   55G  7.0G   46G  14% /
+git=git version 2.34.1
+python3=Python 3.10.12
+curl=curl 7.81.0 (aarch64-unknown-linux-gnu) libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.18
+cmake=MISSING
+gcc=MISSING
+git-lfs=MISSING
+repo=MISSING

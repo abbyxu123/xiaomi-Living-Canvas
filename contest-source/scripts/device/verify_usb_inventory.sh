@@ -11,7 +11,6 @@ Usage: verify_usb_inventory.sh [--require-all] [--inventory-json FILE]
 Read-only USB identity check for the Living Canvas hardware set.
 By default, Gemini-S1 is required and disconnected peripherals are reported.
 Use --require-all only when validating the complete connected hardware set.
-Set MMWAVE_SERIAL and CAMERA_SERIAL locally to verify optional peripherals.
 EOF
 }
 
@@ -49,12 +48,12 @@ else
   system_profiler -json SPUSBDataType >"$input_path"
 fi
 
-python3 - "$input_path" "$require_all" "${MMWAVE_SERIAL:-}" "${CAMERA_SERIAL:-}" <<'PY'
+python3 - "$input_path" "$require_all" <<'PY'
 import json
 import re
 import sys
 
-path, require_all_text, mmwave_serial, camera_serial = sys.argv[1:]
+path, require_all_text = sys.argv[1:]
 require_all = require_all_text == "1"
 
 with open(path, encoding="utf-8") as handle:
@@ -102,15 +101,11 @@ else:
         failed = True
 
 peripherals = (
-    ("mmWave", mmwave_serial),
-    ("Camera", camera_serial),
+    ("mmWave", "10:BD:A3:9F:6A:10"),
+    ("Camera", "A4:CB:8F:D1:4F:5C"),
 )
 
 for label, serial in peripherals:
-    if not serial:
-        print(f"{label}: UNCONFIGURED set {label.upper()}_SERIAL locally")
-        failed = failed or require_all
-        continue
     matches = serial_matches(serial)
     if not matches:
         print(f"{label}: MISSING expected_serial={serial}")

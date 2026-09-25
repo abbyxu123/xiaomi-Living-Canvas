@@ -1,31 +1,36 @@
 # 画间 Living Canvas 代码备份
 
-备份时间：2026-09-21（Asia/Shanghai）
+备份时间：2026-09-25（Asia/Shanghai）
 
 ## Gemini-S1 / openvela 赛事工程
 
-- 本地工程：`local-setup/contest2026_482_xingguangyinli`
-- 分支：`codex/gemini-s1-choice-ui`
-- 提交：`17c68b44f365afdef6626f24d410bdf724616ebc`
-- 当前提交源码快照：`contest-source/`
+- 正式参赛仓：`https://github.com/open-vela/contest2026_482_xingguangyinli`
+- 目标分支：`dev-ai-contest-2026`
+- PR：`https://github.com/open-vela/contest2026_482_xingguangyinli/pull/1`
+- 官方合入提交：`79fa55f1b641e5118514a99781803da458bdd28c`
+- Git tree：`90a93b0281ee0afbbcfd6ea8ee9a4f240318a351`
+- 合入后源码快照：`contest-source/`
 
-源码快照取自当前提交，并移除了本机路径和设备序列号。工作区中未跟踪的主机测试可执行文件属于构建产物，未纳入备份。
+`contest-source/` 与官方合入提交具有相同 Git tree，包含 Living Canvas
+openvela 应用、Dinner Assistant Skill、独立决策后端、测试、Gemini-S1
+适配说明和脱敏证据。未跟踪的构建产物、固件和设备备份未纳入本分支。
 
-## ESP32-S3 演示工程
+## 辅助交互原型历史快照
 
 - 本地工程：`local-setup/living_canvas_esp32s3_preview`
 - 分支：`codex/esp32s3-preview`
 - 当前提交：`ea94156b153de93e83439ec7fa480205841a3212`
 - 当前工作树源码快照：`esp32-working-tree/`
 
-`esp32-working-tree/` 包含提交后的语音适配在研改动，包括：
+`esp32-working-tree/` 保留 2026-09-21 的辅助交互原型工作树快照，包括：
 
 - `src/living_canvas_voice.cpp`
 - `src/living_canvas_voice.h`
 - `tests/test_voice.cpp`
 - 与语音交互相关的入口、状态机、板级引脚及测试更新
 
-该快照保留了当前可读源码，但没有把未提交改动写入 ESP32 原工程的 Git 历史。
+该目录是历史辅助快照，不是 Gemini-S1/openvela 运行证据，也不替代
+`contest-source/` 中的正式参赛源码。
 
 ## 排除内容
 
@@ -40,4 +45,5 @@
 
 ## 恢复方法
 
-直接查看或恢复当前源码时，使用 `contest-source/` 与 `esp32-working-tree/`。ESP32 的语音适配在研改动已包含在工作树快照中。
+恢复正式参赛源码时使用 `contest-source/`。需要查阅 2026-09-21 的辅助
+交互原型时使用 `esp32-working-tree/`。

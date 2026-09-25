@@ -1,7 +1,5 @@
 # Living Canvas ESP32-S3 Preview Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Build and flash an independent portrait Living Canvas offline demo for the new ESP32-S3 board while leaving the Gemini-S1 project unchanged.
 
 **Architecture:** A host-tested C++ state machine drives a direct Arduino_GFX renderer. Mac-side tools convert the supplied portrait media to full-screen RGB565 files stored in a 9 MB SPIFFS partition; the ESP32 streams those files into PSRAM and pushes native 368×448 frames to the CO5300 display.
