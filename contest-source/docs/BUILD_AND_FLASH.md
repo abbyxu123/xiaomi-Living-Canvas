@@ -1,6 +1,11 @@
 # Gemini-S1 Build and Flash Baseline
 
-Last verified: 2026-09-17 (Asia/Shanghai)
+Last verified: 2026-09-25 (Asia/Shanghai)
+
+Current status: `TARGET_BUILD_PASSED / PLATFORM_DEPLOYMENT_IN_ADAPTATION`.
+Sections below preserve dated build evidence. The latest hardware boundary is
+recorded in `docs/GEMINI_S1_ADAPTATION.md` and supersedes earlier first-flash
+planning statements where they differ.
 
 ## Source provenance
 
@@ -149,8 +154,19 @@ To avoid adding the `amd64` architecture or changing APT sources, Ubuntu Jammy's
 
 The successful build contains upstream LTO/type and NAND `memcpy` warnings plus an empty-loadable-segment warning from strip. They did not produce a nonzero exit or prevent image generation. They remain recorded for later upstream review and must not be rewritten as errors or silently removed from evidence.
 
-## Flash gate
+## Current deployment gate
 
-Status: `BLOCKED_FOR_FLASH`
+Status: `PLATFORM_DEPLOYMENT_IN_ADAPTATION`
 
-Building an image does not authorize flashing it. No flash, erase, repartition, OTA, recovery-mode entry, or device write has been performed. The first flash remains blocked until the physical board/storage revision, authoritative factory recovery image, package hash, supported flashing tool, exact recovery sequence, console/rollback route, stable power, and user-present confirmation are all verified. See `docs/RECOVERY.md`.
+On 2026-09-20 the board was identified in FEL mode, its Winbond W25N02KV
+256 MiB SPI NAND was detected, and a full read-only pre-write backup was
+verified. A controlled bootloader-partition operation was then requested with
+verification enabled. It stopped during FES DRAM initialization before the
+storage, MBR, or partition-write stages; persistent NAND write was not reached,
+and FEL identity remained readable.
+
+Next acceptance gates are: resolve the board-specific FES DRAM initialization,
+complete a recoverable verified write, confirm openvela boot, and then verify
+LVGL, touch, audio, network, and ai_agent end to end. See
+`docs/GEMINI_S1_ADAPTATION.md`, `docs/RECOVERY.md`, and
+`tests/evidence/device/gemini-s1-fel-spinand-20260920.txt`.

@@ -1,0 +1,52 @@
+Living Canvas Gemini-S1 bounded-voice product build evidence
+Recorded: 2026-09-14 Asia/Shanghai
+
+Source
+  team application commit: a68765d804db30b7e73e7797bef2e55e57a9f757
+  Gemini-S1 AI/Living Canvas board commit: 657aa2c0
+  media compatibility commit: 5fc8297a5ca8
+  FFmpeg compatibility commit: 0c77024d2205
+
+Host verification
+  seven strict C tests passed:
+    lc_state, lc_clock, lc_dinner, lc_memory, lc_ui, lc_voice, lc_main
+  lc_main executed with: state=0, voice_active=0
+  build metadata, UI metadata, privacy, and git diff checks passed
+
+Build
+  command: ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/ -e -Wno-error -j2
+  exit code: 0
+  SDRAM region used: 12681252 B / 961943040 B (1.32%)
+  CONFIG_LVX_USE_DEMO_CONTEST2026_482_LIVING_CANVAS=y
+
+Integration proof
+  hello_app_main.c compiled successfully
+  lc_voice.c was compiled into the application archive
+  nuttx.elf contains living_canvas_main
+  nuttx.elf contains: Living Canvas core ready (state=%d, voice_active=%d)
+  Full LTO may inline or remove standalone lc_voice symbols; the compiled object,
+  main-entry call, final string, and host execution together prove integration.
+
+Outputs
+  6008596  nuttx/nuttx
+  sha256 8a10ec50efec4c117947a1e7023ac0b2eb3984d8147361af258c1a3c7f70bd94
+
+  57182700  nuttx/nuttx.elf
+  sha256 916ee44904b5a49a5f9c1bbf24b37c07f24769530fcf69d2d7c2058ee6287114
+
+  113143844  nuttx/nuttx.bin
+  sha256 77695b93f223b56e7e685d5ff48c252e972b17f0d4af5a8ed46da7a960784ddd
+
+  6003600  nuttx/vela.bin
+  sha256 c17e48df9da1c0c068cc1cdb521be3156153a63ecaf884b4cf47588635009521
+
+  6003600  vendor/allwinnertech/lichee/board/r528s3/gemini-s1_nand/configs/nsh.fex
+  sha256 c17e48df9da1c0c068cc1cdb521be3156153a63ecaf884b4cf47588635009521
+
+Backup
+  local-setup/backups/gemini-s1-living-canvas-voice-20260914/
+  Mac and guest SHA-256 values for nsh.fex and nuttx.elf match.
+
+Flash state
+  No flash, erase, OTA, repartition, recovery-mode entry, or device write was performed.
+  Status: PRODUCT_BUILD_PASSED / BLOCKED_FOR_FLASH pending docs/RECOVERY.md.

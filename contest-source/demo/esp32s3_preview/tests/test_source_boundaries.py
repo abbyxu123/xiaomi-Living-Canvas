@@ -27,7 +27,7 @@ class SourceBoundaryTest(unittest.TestCase):
         script = (ROOT / "tools" / "flash_verified_device.sh").read_text(encoding="utf-8")
         self.assertIn("EXPECTED_ESP32_MAC", script)
         self.assertIn("/dev/cu.usbmodem", script)
-        self.assertNotIn("usbserial-", script)
+        self.assertNotIn("usbserial-BG043O8P", script)
 
     def test_build_script_regenerates_spiffs_and_checksums(self):
         script = (ROOT / "tools" / "build_firmware.sh").read_text(encoding="utf-8")

@@ -1,0 +1,69 @@
+Living Canvas Gemini-S1 Agent product build evidence
+Date: 2026-09-15 (Asia/Shanghai)
+
+Scope
+- Product build and link verification only.
+- No board write, flash, erase, repartition, OTA, or recovery action occurred.
+
+Source
+- Team branch: codex/living-canvas-core
+- Commit: 151e2e437b37923ad2db25e6d97bbc07eee2dd89
+- Product configuration: vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/
+- Official Agent client: packages/ai_agent/include/velaclaw/client.h
+
+Host verification before product build
+- Nine strict C targets passed:
+  lc_state, lc_clock, lc_dinner, lc_memory, lc_ui, lc_voice,
+  lc_agent, lc_agent_bridge, and lc_main.
+- Build metadata check passed.
+- Agent bridge test used a local fake of the public client contract only;
+  the product build below linked the real openvela implementation.
+
+Product build command
+QEMU_LD_PREFIX=/usr/x86_64-linux-gnu \
+QEMU_SET_ENV=LD_LIBRARY_PATH=/home/abby/.local/share/openvela-x86_64-jammy/root/lib/x86_64-linux-gnu \
+./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/ -e -Wno-error -j2
+
+Observed result
+- Exit status: 0
+- Compiler log included:
+  CC: hello_app_main.c
+  CC: src/lc_agent.c
+  CC: src/lc_agent_bridge.c
+- Final link completed and copied nsh.fex to the Gemini-S1 lichee board directory.
+- Existing upstream LTO and stack-usage warnings remained outside the team app;
+  no warning named a Living Canvas source.
+
+Final link evidence
+- living_canvas_main
+- lc_agent_begin
+- lc_agent_accept_reply
+- lc_agent_poll
+- lc_agent_bridge_open
+- lc_agent_bridge_ask
+- lc_agent_bridge_poll
+- lc_agent_bridge_copy_reply
+- Product strings include the bounded --agent-prompt entry and ai_agent-first error.
+
+Artifacts
+- nsh.fex size: 6,003,600 bytes
+- nsh.fex SHA-256:
+  bb76f24bea2c7edad90d3abaf4d54b6f93e1094a1e90339a488dd8c1a6858a2d
+- nuttx.elf SHA-256:
+  75e20c02b5c0a91bc921d601c85e2ae8dbb43b6fae835408c269312ef7fab889
+- nsh.fex was byte-identical to nuttx/vela.bin.
+- A local offline copy is stored under:
+  local-setup/backups/gemini-s1-living-canvas-agent-20260915/
+
+Safety behavior introduced
+- One in-flight Agent request only.
+- Input, reply, and timeout are bounded.
+- Stale request IDs and terminal control characters are rejected.
+- Timeout, clock rollback, or cancellation locks the session against unsafe reuse.
+- Model replies remain text; they do not directly gain hardware, memory, payment,
+  shell, or other side-effect authority.
+
+Gate
+- PRODUCT_BUILD_PASSED
+- BLOCKED_FOR_FLASH until revision-specific recovery and rollback instructions
+  are verified for the physical Gemini-S1 V1.1 board.

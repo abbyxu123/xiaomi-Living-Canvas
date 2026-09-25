@@ -1,0 +1,27 @@
+Living Canvas Gemini-S1 voice-entry build failure evidence
+Recorded: 2026-09-14 Asia/Shanghai
+
+Source commit
+  8cf9f118738e (bounded voice capture session)
+
+Build
+  command: ./build.sh vendor/allwinnertech/boards/r528/r528s3-gemini-s1/configs/nsh_minidisplay/ -e -Wno-error -j2
+  exit code: 2
+
+Observed failure
+  hello_app_main.c:26:3: error: expected expression before 'return'
+  hello_app_main.c:26:12: error: expected ';' before '}' token
+
+Cause
+  The main-entry printf continuation arguments were missing. Existing host tests
+  compiled the modules but did not compile hello_app_main.c, so the integration
+  syntax error was not covered.
+
+Regression response
+  A new host test compiles and executes living_canvas_main with strict warnings.
+  The test reproduced the error before the fix and passed after the continuation
+  arguments were restored. Fix commit: a68765d804db30b7e73e7797bef2e55e57a9f757.
+
+Safety
+  The build stopped before image generation. The prior successful product image
+  and its backup were not modified or written to the physical board.

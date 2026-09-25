@@ -1,7 +1,5 @@
 # Living Canvas Independent Backend Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Build a self-contained Living Canvas decision backend inside the contest repository and remove every active dependency and naming trace from the legacy prototype.
 
 **Architecture:** Add a small FastAPI service under `backend/src/living_canvas_backend` with pure decision modules, a deterministic fallback catalog, optional OpenAI-compatible model routing, explicit confirmation, and a newly authored phone handoff page. Keep the Gemini S1 application as a separate C client of this API, rename its contract boundary generically, and enforce a repository-wide legacy-name gate.

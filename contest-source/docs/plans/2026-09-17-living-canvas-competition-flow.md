@@ -1,7 +1,5 @@
 # Living Canvas Competition Flow Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Build and verify the smallest Gemini S1 takeout flow from Living Canvas choice screen to a Living Canvas phone-handoff QR code.
 
 **Architecture:** Add a pure-C, transport-independent controller to the existing Living Canvas application, then connect it to the owned backend contract and LVGL display. Keep all backend and board visuals in the Living Canvas project. Hardware network and button adapters are isolated so the core flow can be tested before UART-assisted device validation.

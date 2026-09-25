@@ -35,7 +35,9 @@ def cover_crop(image: Image.Image, width: int = WIDTH, height: int = HEIGHT) -> 
 
 def rgb565_bytes(image: Image.Image) -> bytes:
     pixels = []
-    for red, green, blue in image.convert("RGB").get_flattened_data():
+    rgb = image.convert("RGB")
+    flattened = getattr(rgb, "get_flattened_data", rgb.getdata)
+    for red, green, blue in flattened():
         value = ((red & 0xF8) << 8) | ((green & 0xFC) << 3) | (blue >> 3)
         pixels.append(value)
     return struct.pack(f"<{len(pixels)}H", *pixels)

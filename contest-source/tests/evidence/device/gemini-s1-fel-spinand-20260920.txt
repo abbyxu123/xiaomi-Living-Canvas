@@ -1,0 +1,42 @@
+Gemini-S1 FEL and SPI NAND evidence
+Date: 2026-09-20 (Asia/Shanghai)
+Status: DEVICE_BASELINE_VERIFIED / PERSISTENT_WRITE_NOT_REACHED
+
+Device detection
+- USB FEL VID:PID: 1f3a:efe8.
+- FEL chip ID: 0x00185900.
+- Chip family: R528/T113; target board uses R528S3.
+
+SPI NAND detection
+- Model: Winbond W25N02KV.
+- Capacity: 268,435,456 bytes (256 MiB).
+
+Pre-write protection
+- A full read-only SPI NAND backup was created from address 0 for
+  0x10000000 bytes before attempting the first partition write.
+- Backup size: 268,435,456 bytes.
+- Backup SHA-256:
+  df9a5917c8849a25c90c0ca9b5e98c94f4e5e0766f4981841a964ded0045f5b8
+- No erase or NAND write command was used while creating the backup.
+- The raw backup is recovery evidence, not a normal firmware image, and is not
+  stored in the contest repository.
+
+Candidate image
+- Factory-layout candidate SHA-256:
+  97b8e779f3cbc7aec56c1285a266b2daaa25c24ccabf6c494dcc96712bd9d4e8
+
+First controlled partition-write attempt
+- Requested mode: partition.
+- Selected partition: bootloader.
+- Verification requested: true.
+- The operation stopped automatically during FES DRAM initialization after
+  60 RAM read attempts.
+- Storage, MBR, and partition write stages were not entered.
+- After the stop, FEL identity 0x00185900 remained readable.
+- Persistent NAND write reached: no.
+
+Conclusion
+- FEL_AND_SPINAND_IDENTIFICATION_PASSED
+- PRE_WRITE_BACKUP_VERIFIED
+- FES_DRAM_INITIALIZATION_ADAPTATION_REQUIRED
+- GEMINI_S1_RUNTIME_NOT_YET_CLAIMED

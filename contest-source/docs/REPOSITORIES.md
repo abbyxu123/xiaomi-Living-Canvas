@@ -1,49 +1,43 @@
 # Repository and Submission Map
 
-Last verified: 2026-09-14 (Asia/Shanghai)
+Last verified: 2026-09-25 (Asia/Shanghai)
 
 ## Repository roles
 
-| Role | Repository | Branch / revision | Status |
-| --- | --- | --- | --- |
-| Official team manifest and submission target | `https://github.com/open-vela/contest2026_482_xingguangyinli.git` | `dev-ai-contest-2026` at `224850b197da7837e60b45573af26a479d366dd9` | Read access verified |
-| Personal planning and backup repository | `https://github.com/abbyxu123/xiaomi-Living-Canvas.git` | `main` at `83d6560af8b7043bcf9b8132f2af2264168270db` | Read access verified |
-| Official docs | `https://github.com/open-vela/docs.git` | `dev-ai-contest-2026` at `cb0389919ea4fc86774702fb36c08ee9b1366e6c` | Read access verified |
-| Official Allwinner board support | `https://github.com/open-vela/vendor_allwinnertech.git` | `dev-ai-contest-2026` at `1676386193f0e710121e710935f1757c0f34b662` | Read access verified |
+| Role | Repository | Submission use |
+| --- | --- | --- |
+| Official team repository | `https://github.com/open-vela/contest2026_482_xingguangyinli` | 正式参赛仓；合入目标为 `dev-ai-contest-2026` |
+| Personal fork | `https://github.com/abbyxu123/contest2026_482_xingguangyinli` | 开发分支和 Pull Request 来源，不替代正式参赛仓 |
+| Personal project backup | `https://github.com/abbyxu123/xiaomi-Living-Canvas` | 项目过程备份，不作为组委会验收地址 |
+| Official contest docs | `https://github.com/open-vela/docs` | 赛道、提交和 AI Coding 日志规则来源 |
 
-The personal repository and the official contest repository have different purposes. The personal repository is not a substitute for the contest submission target.
+现有提交使用 Pull Request：
 
-## Current local integration state
+```text
+abbyxu123/contest2026_482_xingguangyinli:codex/gemini-s1-choice-ui
+  -> open-vela/contest2026_482_xingguangyinli:dev-ai-contest-2026
+```
 
-- The canonical local team checkout is at `/Users/<USER>/Desktop/xiaomi-openvela-ibbie/local-setup/contest2026_482_xingguangyinli`.
-- Product work is isolated on local branch `codex/living-canvas-core` at `58e1031`.
-- The complete Ubuntu source workspace is at `/home/abby/openvela-workspace`; its team checkout is pinned to official revision `224850b197da7837e60b45573af26a479d366dd9` for reproducible builds.
-- The desktop project uses an ASCII-only canonical path; commands must not reintroduce the former non-ASCII directory name.
-- No branch has been pushed by this setup process.
-- No fork, pull request, CLA action, or remote mutation has been performed by this setup process.
+PR 地址：`https://github.com/open-vela/contest2026_482_xingguangyinli/pull/1`
 
-## Official manifest mapping
+## Manifest mapping
 
-The team manifest maps only the team's repository into the openvela source tree:
+团队 manifest 只把本队目录映射到 openvela 构建树：
 
 | Team source path | Build-tree destination |
 | --- | --- |
-| `contest2026_482_xingguangyinli/app/hello_app` | `packages/demos/contest2026_482_hello_app` |
-| `contest2026_482_xingguangyinli/quickapp/hello_quickapp` | `packages/apps/contest2026_482_hello_quickapp` |
-| `contest2026_482_xingguangyinli/board/contest_board` | `vendor/openvela/boards/contest2026_482_board` |
+| `app/hello_app` | `packages/demos/contest2026_482_hello_app` |
+| `quickapp/hello_quickapp` | `packages/apps/contest2026_482_hello_quickapp` |
+| `board/contest_board` | `vendor/openvela/boards/contest2026_482_board` |
 
-Product code should be authored in the team repository paths, not copied into shared upstream repositories.
+产品源码应在本队仓库维护，并通过团队 manifest 进入 openvela 工作区；不会把本队实现直接复制到共享上游仓库。
 
-## Submission path still requiring user presence
+## 提交流程
 
-The official guide requires the registration GitHub account to accept the collaborator invitation, fork the official team repository, push a development branch, open a pull request back to the official team repository, satisfy the CLA check, and merge the reviewed pull request.
+1. 在个人 fork 的开发分支完成代码、测试和脱敏证据。
+2. 通过 PR #1 请求合入正式参赛仓。
+3. PR 检查和人工复核通过后，合入官方 `dev-ai-contest-2026`。
+4. 以官方仓库目标分支上的提交作为最终参赛状态。
+5. 合入后在个人项目备份仓创建新的备份节点；历史备份不覆盖。
 
-The public fork `https://github.com/abbyxu123/contest2026_482_xingguangyinli` was not confirmed during this audit. Do not create a fork, accept an invitation, sign a CLA, push, or open a pull request without the user present.
-
-Status: `BLOCKED_FOR_GITHUB_ACCOUNT_ACTION`
-
-## Full openvela workspace
-
-The Ubuntu virtual disk and root filesystem were expanded, required packages and Git LFS were installed, and the official `repo` launcher was installed in a user-owned directory. `repo sync -c -j2` completed successfully and a revision-pinned manifest was generated. The clean Gemini-S1 board baseline built with exit code `0`; see `docs/ENVIRONMENT_SETUP.md` and `docs/BUILD_AND_FLASH.md`.
-
-Status: `READY_FOR_DEVELOPMENT`
+官方仓库是最终交付位置；个人 fork 只是 PR 工作副本；个人项目仓用于备份。三者用途不同。
