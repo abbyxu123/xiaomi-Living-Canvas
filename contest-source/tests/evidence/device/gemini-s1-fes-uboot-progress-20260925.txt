@@ -1,0 +1,68 @@
+Gemini-S1 macOS FES-to-U-Boot progress evidence
+Date: 2026-09-25 (Asia/Shanghai)
+Status: DRAM_INIT_PASSED / FES_REENUMERATION_PENDING
+
+Scope
+- Host: Apple Silicon macOS.
+- Target: Gemini-S1 (Allwinner R528S3).
+- Request remained limited to the bootloader partition with verification
+  enabled and reboot selected as the post-action.
+- No full erase, partition erase, RES write, or USRDATA write was requested.
+
+Observed FEL and DRAM sequence
+- The device enumerated in FEL mode before the attempt.
+- The 20,640-byte FES payload was loaded at 0x00028000.
+- The DRAM result was readable on the first check after 1.01 seconds.
+- Returned init flag: 0x4d415244 (ASCII "DRAM").
+- Returned update flag: 1.
+- Result: DRAM initialization passed.
+
+Observed U-Boot sequence
+- The 638,976-byte U-Boot payload was transferred to 0x40a00000.
+- The tool also transferred the image-provided DTB placeholder and compiled
+  system configuration to their staging addresses.
+- U-Boot execution was requested successfully.
+- The device then left FEL mode but did not enumerate as an FES/SRV USB
+  device within the 45-second bounded wait.
+- Final result: U-Boot startup timed out before FES storage initialization.
+
+Write boundary
+- The operation did not reach FES storage query, MBR update, erase, or
+  partition-download stages.
+- Persistent NAND write reached: no.
+- After the timeout, the FEL USB endpoint was no longer present; a physical
+  USB re-enumeration is required before the next controlled attempt.
+
+Toolchain finding and regression coverage
+- FES reported updated DRAM parameters, while the host flashing path did not
+  propagate those returned parameters into the staged U-Boot header.
+- A regression test now requires FES-reported parameters to be present in the
+  uploaded U-Boot image when the update flag is set.
+- The focused regression test failed before the change and passed afterward.
+- The complete executable unit/integration suite passed: 197 tests across the
+  library, binary, and CLI integration targets. Documentation tests were not
+  executed because the portable Rust toolchain did not include rustdoc.
+- A patched Apple Silicon release binary was produced for the next controlled
+  board attempt; its SHA-256 is:
+  ff5d785bd7d9a4c60c60d7a1e6875e60ca728c2c7e07bc51d83a2df3abaf289d
+
+Patched controlled attempt
+- After a physical USB re-enumeration, FEL identity was read again as
+  0x00185900 (R528/T113 family).
+- DRAM initialization again passed on the first status read after 1.01
+  seconds.
+- The log confirmed that the returned parameters were applied to the staged
+  U-Boot header before transfer.
+- U-Boot transfer and execution request again completed, but the device did
+  not enumerate in FES/SRV mode during the bounded 45-second wait.
+- The parameter-propagation correction is retained as a tested host-tool
+  improvement, but it did not by itself resolve FES re-enumeration on this
+  board.
+- The operation again stopped before storage query or any NAND write.
+
+Conclusion
+- FEL_DRAM_INITIALIZATION_PASSED
+- FES_REPORTED_DRAM_UPDATE_CAPTURED
+- UBOOT_TRANSFER_AND_EXEC_REQUEST_PASSED
+- FES_USB_REENUMERATION_NOT_YET_PASSED
+- PERSISTENT_NAND_WRITE_NOT_REACHED

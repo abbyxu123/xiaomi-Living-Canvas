@@ -165,8 +165,23 @@ verification enabled. It stopped during FES DRAM initialization before the
 storage, MBR, or partition-write stages; persistent NAND write was not reached,
 and FEL identity remained readable.
 
-Next acceptance gates are: resolve the board-specific FES DRAM initialization,
+Next acceptance gates are: resolve the U-Boot-to-FES USB re-enumeration,
 complete a recoverable verified write, confirm openvela boot, and then verify
 LVGL, touch, audio, network, and ai_agent end to end. See
 `docs/GEMINI_S1_ADAPTATION.md`, `docs/RECOVERY.md`, and
 `tests/evidence/device/gemini-s1-fel-spinand-20260920.txt`.
+
+The same bounded operation was repeated on Apple Silicon macOS on 2026-09-25.
+Image integrity and structure, FEL enumeration, and SPI NAND reads passed. The
+operation again stopped after 60 failed FES DRAM readiness checks, before any
+storage-write stage. Three NAND samples were byte-identical before and after
+the attempt. The sanitized record is
+`tests/evidence/device/gemini-s1-macos-retest-20260925.txt`.
+
+After a later physical USB re-enumeration, the same FES payload initialized
+DRAM successfully twice on the first status read. U-Boot transfer and execution
+were reached, including a tested correction that propagates FES-returned DRAM
+parameters into the staged U-Boot header. The device did not enumerate as an
+FES/SRV device within the bounded wait, so the flow still stopped before
+storage query or persistent NAND write. See
+`tests/evidence/device/gemini-s1-fes-uboot-progress-20260925.txt`.

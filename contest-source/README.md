@@ -128,7 +128,7 @@ PYTHONPATH=backend/src python -m uvicorn living_canvas_backend.app:app \
 - `docs/SKILL_DEMO.md`
 - `docs/RECOVERY.md`
 
-当前状态为 `TARGET_BUILD_PASSED / PLATFORM_DEPLOYMENT_IN_ADAPTATION`。首次受控写入在 FES DRAM 初始化阶段停止，未进入持久化 NAND 写入；后续按板卡版本、恢复、写入、启动、显示、音频、网络和 ai_agent 门禁逐项验证。
+当前状态为 `TARGET_BUILD_PASSED / PLATFORM_DEPLOYMENT_IN_ADAPTATION`。最新受控验证已通过 FES DRAM 初始化并完成 U-Boot 内存传输，当前停在 U-Boot/FES USB 重枚举门禁，尚未进入持久化 NAND 写入；后续按恢复、写入、启动、显示、音频、网络和 ai_agent 门禁逐项验证。
 
 ### 5. 辅助交互原型（非 openvela 运行证据）
 
@@ -167,7 +167,7 @@ AI 协作目前用于需求拆解、风险边界、官方资料核对、测试�
 | LVGL 真机画面、音频播放、网络、ai_agent 板端运行时 | 平台部署适配中，当前不作已完成声明 | `docs/GEMINI_S1_ADAPTATION.md` |
 | 毫米波、MPR121、灯光、摄像头 | 未接入 | 外设保持断开 |
 | 未修改 Gemini-S1 基线构建 | 已通过 | `docs/BUILD_AND_FLASH.md` |
-| 首次持久化写入 | FES DRAM 初始化适配中；尚未进入 NAND 写入 | `docs/GEMINI_S1_ADAPTATION.md` |
+| 首次持久化写入 | FES DRAM 初始化已通过；U-Boot/FES 重枚举适配中，尚未进入 NAND 写入 | `docs/GEMINI_S1_ADAPTATION.md` |
 
 ## 八、隐私与许可证
 

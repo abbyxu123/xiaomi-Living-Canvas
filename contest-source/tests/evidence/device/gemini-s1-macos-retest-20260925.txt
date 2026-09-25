@@ -1,0 +1,67 @@
+Gemini-S1 macOS FEL, image and controlled-flash evidence
+Date: 2026-09-25 (Asia/Shanghai)
+Status: HOST_PATH_VERIFIED / PERSISTENT_WRITE_NOT_REACHED
+
+Scope
+- Host: Apple Silicon macOS.
+- Target: Gemini-S1 (R528S3).
+- The test used a partition-scoped bootloader request with verification enabled.
+- No full erase, partition erase, RES write, or USRDATA write was requested.
+
+USB and FEL baseline
+- FT232R USB UART and Allwinner FEL composite device were both enumerated.
+- USB FEL VID:PID: 1f3a:efe8.
+- FEL chip ID: 0x00185900 (R528/T113 family).
+- Five consecutive FEL identity reads completed successfully before the
+  controlled-flash test.
+- OpenixCLI libusb scan selected one device at Bus 000, Port 001.
+
+SPI NAND baseline
+- Model: Winbond W25N02KV.
+- Capacity: 268,435,456 bytes (256 MiB).
+- Read-only 4 KiB samples completed at nine offsets from 0 through
+  134,217,728 bytes. Samples at several offsets contained data, so the existing
+  NAND was not treated as blank.
+
+Candidate image
+- SHA-256:
+  97b8e779f3cbc7aec56c1285a266b2daaa25c24ccabf6c494dcc96712bd9d4e8
+- Container size: 28,234,752 bytes (26.93 MiB).
+- OpenixCLI inspection passed.
+- Image contents: 22 embedded files and 10 MBR partition entries.
+- Encrypted: false.
+
+Controlled bootloader request
+- Mode: partition.
+- Selected partition: bootloader.
+- Post-write verification requested: true.
+- Post-action requested: reboot.
+- The tool loaded the 20,640-byte FES payload and started DRAM
+  initialization.
+- All 60 DRAM readiness checks returned "USB transfer failed".
+- Final result: "Timeout: DRAM initialization not completed after 60
+  attempts".
+- The operation did not reach storage initialization, MBR update, erase, or
+  partition-write stages.
+
+Post-attempt integrity checks
+- FEL identity and OpenixCLI device scan remained readable immediately after
+  the stopped operation.
+- NAND samples at offsets 0, 1,048,576, and 4,194,304 bytes were read again.
+- Each post-attempt sample was byte-for-byte identical to its pre-attempt
+  sample.
+- Persistent NAND write reached: no.
+
+Serial and runtime boundary
+- The USB UART received bytes during reset testing, but the capture was not a
+  valid text boot log and is not used as runtime evidence.
+- ADB did not enumerate while the board remained in FEL mode.
+- Gemini-S1 openvela runtime is not claimed by this record.
+
+Conclusion
+- MACOS_USB_FEL_PATH_VERIFIED
+- IMAGE_INTEGRITY_AND_STRUCTURE_VERIFIED
+- SPI_NAND_READ_PATH_VERIFIED
+- CONTROLLED_WRITE_STOPPED_BEFORE_NAND
+- PRE_WRITE_SAMPLES_UNCHANGED
+- FES_DRAM_INITIALIZATION_ADAPTATION_REQUIRED

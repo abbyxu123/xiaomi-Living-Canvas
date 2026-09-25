@@ -19,10 +19,15 @@ Gemini-S1（Allwinner R528S3）是 Living Canvas 的正式目标主控，目标�
 | 设备基线 | USB/ADB 身份和板载麦克风非内容信号已验证 | `tests/evidence/device/` |
 | 恢复通道 | FEL 身份、R528/T113 芯片 ID、Winbond 256 MiB SPI NAND 已识别 | `tests/evidence/device/gemini-s1-fel-spinand-20260920.txt` |
 | 写入前保护 | 完整 SPI NAND 只读备份已生成并校验 | `tests/evidence/device/gemini-s1-fel-spinand-20260920.txt` |
+| macOS 部署复核 | Apple Silicon macOS 上完成镜像校验、结构检查、FEL 稳定性和 NAND 只读通路复核；FES DRAM 初始化已通过，U-Boot/FES 重枚举仍待完成 | `tests/evidence/device/gemini-s1-macos-retest-20260925.txt`、`tests/evidence/device/gemini-s1-fes-uboot-progress-20260925.txt` |
 
 ## 当前适配边界
 
-首次分区写入流程在 FES DRAM 初始化阶段超时，流程在进入存储、MBR 和分区写入阶段之前自动停止。停止后 FEL 芯片身份仍可读取，未发生持久化 NAND 写入。
+首次分区写入流程曾在 FES DRAM 初始化阶段超时，流程在进入存储、MBR 和分区写入阶段之前自动停止。停止后 FEL 芯片身份仍可读取，未发生持久化 NAND 写入。
+
+2026 年 9 月 25 日在 Apple Silicon macOS 上再次执行同范围验证，结果复现：镜像 SHA-256 与结构检查通过，FEL 与 SPI NAND 只读链路稳定；写入工具加载 FES 后连续 60 次未能完成 DRAM 就绪检查。操作前后的三个 NAND 采样点逐字节一致，因此该次测试仍不记为持久化写入或板端运行成功。
+
+同日重新枚举 USB 后继续执行受控验证，FES DRAM 初始化连续两次在首次状态读取时通过，返回 `0x4d415244`（`DRAM`）成功标志和参数更新标志。随后 U-Boot、DTB 占位项与系统配置完成内存传输，U-Boot 执行请求成功；设备离开 FEL，但在 45 秒门限内没有枚举成 FES/SRV 设备。工具侧同时补充了 FES 返回参数向 U-Boot 的传递及回归测试；完整可执行测试集 197 项通过。应用该修正后的实板结果仍停在 FES 重枚举门禁，因此没有进入存储查询、MBR、擦除或分区下载阶段。
 
 因此，当前可以准确陈述：
 
@@ -31,7 +36,7 @@ Gemini-S1（Allwinner R528S3）是 Living Canvas 的正式目标主控，目标�
 - Gemini-S1 的首次持久化写入、启动以及 LVGL、音频、网络、ai_agent 的板端端到端链路仍在适配验证中；
 - 当前不把尚未完成的板端运行描述为已完成，也不把其他主控的演示结果替代为 openvela 运行结果。
 
-这类首次刷写问题位于板级恢复、DRAM 初始化和存储写入链路，处理方式是保留原始存储备份、限制首次写入范围、核对硬件版本和恢复路径，并在每个阶段生成可回溯证据。
+当前首次刷写问题已经从 DRAM 初始化收敛到 U-Boot/FES 启动与 USB 重枚举链路。处理方式仍是保留原始存储备份、限制首次写入范围、核对烧录专用 U-Boot、板卡版本和恢复路径，并在每个阶段生成可回溯证据。
 
 ## 代码完成度与运行门禁
 
@@ -48,7 +53,7 @@ Gemini-S1（Allwinner R528S3）是 Living Canvas 的正式目标主控，目标�
 
 板端验收只有在以下门禁全部通过后才会标记完成：
 
-1. 核对板卡版本、FES DRAM 参数、恢复工具和可回滚镜像；
+1. 核对板卡版本、烧录专用 U-Boot/FES 组合、恢复工具和可回滚镜像；
 2. 在可恢复条件下完成受控写入并校验分区；
 3. 通过串口或等价通道确认 openvela 启动；
 4. 分别验证 LVGL 显示、触摸、音频、网络和 ai_agent；
